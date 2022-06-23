@@ -26,4 +26,4 @@ likes: {
   }
 });
 
-module.exports = mongoose.model('card', cardSchema);
+module.exports = mongoose.model('card', cardSchema);// можо удалить комментарий
