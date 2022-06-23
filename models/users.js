@@ -16,4 +16,4 @@ const userSchema = new mongoose.Schema({
   avatar : String, // тип — String
 });
 
-module.exports = mongoose.model('user', userSchema);
+module.exports = mongoose.model('user', userSchema);// можо удалить комментарий
