@@ -1,5 +1,12 @@
 {
   "extends": "airbnb-base",
   "allow": ["_id"]
+
 }
 
+
+
+// {
+//   "extends": "airbnb-base",
+//   "allow": ["_id"]
+// }
