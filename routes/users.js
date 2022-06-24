@@ -1,55 +1,27 @@
+// del //routes/user
 const router = require("express").Router();
 
-const User = require("../models/user");
-
-
-
-// const {
-//   getUser,
-//   getUserById,
-//   createUser,
-//   updateProfile,
-//   updateAvatar,
-// } = require('../controllers/users');
-
+const {
+  getUsers,
+  getUserById,
+  createUser,
+  updateProfile,
+  updateAvatar,
+} = require("../controllers/users");
 
 //возвращает всех пользователей
-router.get("/users", (req, res) => {
-  // const { users } = req.params;
-  // res.send(users);
-
-  User.find({})
-    // .then((user) => res.send({ data: user }))
-    .then((user) => res.status(200).send(user))//как вариант
-    .catch((err) => res.status(500).send({ message: "Произошла ошибка" }));
-});
+router.get("/users", getUsers);
 
 //возвращает пользователя по _id
-router.get("/users/:userId", (req, res) => {
-  // res.send(req.params);
-  User.findById(req.params.userId)  // app.use('/users', require('./routes/users'));
-    .then((user) => res.send({ data: user }))
-    .catch((err) => res.status(500).send({ message: "Произошла ошибка" }));
-});
+router.get("/users/:userId", getUserById);
 
 //создаёт пользователя
-// router.post('/users', createUser);
+router.post("/users", createUser);
 
+//обновляет профиль
+router.patch("/users/me", updateProfile);
 
-router.post("/users", (req, res) => {
-
-
-  const { name, about, avatar } = req.body;
-
-
-  User.create({ name, about, avatar })
-    // вернём записанные в базу данные
-    .then((user) => res.send({ data: user }))
-    // данные не записались, вернём ошибку
-    .catch((err) => res.status(500).send({ message: "Произошла ошибка" }));
-});
+//обновляет аватар
+router.patch("/users/me/avatar", updateAvatar);
 
 module.exports = router;
-
-
-

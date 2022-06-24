@@ -7,7 +7,7 @@ const { PORT = 3000 } = process.env;
 const app = express();
 const addObjUser =(req, res, next) => {
   req.user = {
-    _id: '62b184efd90cc400ada5eaed',
+    _id: '62b425f3597ead12a78ac207',
   };
 
   next();
