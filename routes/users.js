@@ -4,13 +4,13 @@ const User = require("../models/user");
 
 
 
-const {
-  getUser,
-  getUserById,
-  createUser,
-  updateProfile,
-  updateAvatar,
-} = require('../controllers/users');
+// const {
+//   getUser,
+//   getUserById,
+//   createUser,
+//   updateProfile,
+//   updateAvatar,
+// } = require('../controllers/users');
 
 
 //возвращает всех пользователей
@@ -25,29 +25,29 @@ router.get("/users", (req, res) => {
 });
 
 //возвращает пользователя по _id
-router.get("/users/:id", (req, res) => {
+router.get("/users/:userId", (req, res) => {
   // res.send(req.params);
-  User.findById(req.params.userid)  // app.use('/users', require('./routes/users'));
+  User.findById(req.params.userId)  // app.use('/users', require('./routes/users'));
     .then((user) => res.send({ data: user }))
     .catch((err) => res.status(500).send({ message: "Произошла ошибка" }));
 });
 
 //создаёт пользователя
-router.post('/users', createUser);
+// router.post('/users', createUser);
 
 
-// router.post("/users", (req, res) => {
-
-//   console.log('qqqqqqqqqqqqqqqqqqqqqqqqqqq', res.body)
-//   const { name, about, avatar } = req.body;
+router.post("/users", (req, res) => {
 
 
-//   User.create({ name, about, avatar })
-//     // вернём записанные в базу данные
-//     .then((user) => res.send({ data: user }))
-//     // данные не записались, вернём ошибку
-//     .catch((err) => res.status(500).send({ message: "Произошла ошибка" }));
-// });
+  const { name, about, avatar } = req.body;
+
+
+  User.create({ name, about, avatar })
+    // вернём записанные в базу данные
+    .then((user) => res.send({ data: user }))
+    // данные не записались, вернём ошибку
+    .catch((err) => res.status(500).send({ message: "Произошла ошибка" }));
+});
 
 module.exports = router;
 
