@@ -84,7 +84,7 @@ module.exports.updateProfile = (req, res) => {
 };
 
 module.exports.updateAvatar = (req, res) => {
-  User.findByIdAndUpdate(req.user._id, req.body, { new: true })
+  User.findByIdAndUpdate(req.user._id, req.body, { new: true, runValidators: true })
     .then((user) => {
       if (!user) {
         return res
