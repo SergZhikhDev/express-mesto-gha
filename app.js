@@ -27,7 +27,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(addObjUser);
 app.use("/users", routesUser);
-app.use("/users", routesCard);
+app.use("/cards", routesCard);
 
 app.use((req, res) => {
   res.status(NOT_FOUND_CODE).send({ message: "Страница не найдена" });
