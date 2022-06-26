@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require('../models/user');
 
 const {
   CORRECT_CODE,
@@ -6,14 +6,12 @@ const {
   BAD_REQUEST_CODE,
   NOT_FOUND_CODE,
   SERVER_ERROR_CODE,
-} = require("../utils/errorcodes");
+} = require('../utils/errorcodes');
 
 module.exports.getUsers = (req, res) => {
   User.find({})
     .then((user) => res.status(CORRECT_CODE).send(user))
-    .catch((err) =>
-      res.status(SERVER_ERROR_CODE).send({ message: "Ошибка по-умолчанию" })
-    );
+    .catch(() => res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка по-умолчанию' }));
 };
 
 module.exports.getUserById = (req, res) => {
@@ -22,19 +20,19 @@ module.exports.getUserById = (req, res) => {
       if (!user) {
         return res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрашиваемый пользователь не найден" });
+          .send({ message: 'Запрашиваемый пользователь не найден' });
       }
       return res.status(CORRECT_CODE).send(user);
     })
     .catch((err) => {
-      if (err.name === "CastError") {
+      if (err.name === 'CastError') {
         return res
           .status(BAD_REQUEST_CODE)
-          .send({ message: "Пользователь по указанному _id не найден!" });
+          .send({ message: 'Переданы некорректные данные для запроса' });
       }
       return res
         .status(SERVER_ERROR_CODE)
-        .send({ message: "Ошибка по умоланию" });
+        .send({ message: 'Ошибка по умоланию' });
     });
 };
 
@@ -42,14 +40,14 @@ module.exports.createUser = (req, res) => {
   User.create(req.body)
     .then((user) => res.status(CREATE_CODE).send({ data: user }))
     .catch((err) => {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         return res.status(BAD_REQUEST_CODE).send({
-          message: "Переданы некорректные данные при создании пользователя",
+          message: 'Переданы некорректные данные при создании пользователя',
         });
       }
       return res
         .status(SERVER_ERROR_CODE)
-        .send({ message: "Ошибка по умоланию" });
+        .send({ message: 'Ошибка по умоланию' });
     });
 };
 
@@ -62,20 +60,20 @@ module.exports.updateProfile = (req, res) => {
       if (!user) {
         return res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрашиваемый пользователь не найден" });
+          .send({ message: 'Запрашиваемый пользователь не найден' });
       }
       return res.status(CORRECT_CODE).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === "CastError" || err.name === "ValidationError") {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(BAD_REQUEST_CODE).send({
-          message: "Переданы некорректные данные при обновлении профиля",
+          message: 'Переданы некорректные данные при обновлении профиля',
         });
       }
 
       return res
         .status(SERVER_ERROR_CODE)
-        .send({ message: "Ошибка по умоланию" });
+        .send({ message: 'Ошибка по умоланию' });
     });
 };
 
@@ -88,19 +86,19 @@ module.exports.updateAvatar = (req, res) => {
       if (!user) {
         return res
           .status(NOT_FOUND_CODE)
-          .send({ message: "Запрашиваемый пользователь не найден" });
+          .send({ message: 'Запрашиваемый пользователь не найден' });
       }
       return res.status(CORRECT_CODE).send({ data: user });
     })
     .catch((err) => {
-      if (err.name === "CastError" || err.name === "ValidationError") {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         return res.status(BAD_REQUEST_CODE).send({
-          message: "Переданы некорректные данные при обновлении аватара",
+          message: 'Переданы некорректные данные при обновлении аватара',
         });
       }
 
       return res
         .status(SERVER_ERROR_CODE)
-        .send({ message: "Ошибка по умоланию!" });
+        .send({ message: 'Ошибка по умоланию!' });
     });
 };
