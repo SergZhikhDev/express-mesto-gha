@@ -1,11 +1,13 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const AnotherServerError = ('../errors/another-server-error');
-const BadRequestError = ('../errors/bad-request-error');
-const BadRequireToken = ('../errors/bad-require-token');
-const NotFoundError = ('../errors/not-found-error');
-const NotUniqueEmailError = ('../errors/not-unique-email');
+const AnotherServerError = require('../errors/another-server-error');
+const BadRequestError = require('../errors/bad-request-error');
+const BadRequireToken = require('../errors/bad-require-token');
+const NotFoundError = require('../errors/not-found-error');
+const NotUniqueEmailError = require('../errors/not-unique-email');
+
+console.log('сообщение об ошибке', BadRequestError);
 
 const User = require('../models/user');
 
