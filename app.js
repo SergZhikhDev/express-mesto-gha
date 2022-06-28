@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const { errors } = require('celebrate');
 const routesUser = require('./routes/users');
 const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
@@ -34,6 +35,7 @@ app.use(auth);
 app.use((req, res) => {
   res.status(NOT_FOUND_CODE).send({ message: 'Страница не найдена' });
 });
+app.use(errors()); // обработчик ошибок celebrate
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
