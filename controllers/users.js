@@ -18,7 +18,7 @@ module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((user) => {
       if (!user) {
-        throw new AnotherServerError('Ошибка по-умолчанию');
+        throw new BadRequireToken('Переданы некорректные данные для запроса');
       }
       res.status(CORRECT_CODE).send(user);
     })
