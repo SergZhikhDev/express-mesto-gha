@@ -1,5 +1,7 @@
+/* eslint-disable max-len */
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const { log } = require('../middlewares/consolelog');// мидлвер создана для разработки, в дальнейшем удалю.
 
 const {
   getUsers,
@@ -10,13 +12,7 @@ const {
 } = require('../controllers/users');
 
 router.get('/', getUsers);
-
-router.get('/:userId', celebrate({
-  // валидируем параметры
-  params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
-  }),
-}), getUserById);
+router.get('/:userId', log, getUserById);
 
 router.get('/me', getUserSelfInfo);
 
@@ -32,5 +28,4 @@ router.patch('/me/avatar', celebrate({
     avatar: Joi.string().pattern(/^(https?:\/\/)(www\.)?([\w-.~:/?#[\]@!$&')(*+,;=]*\.?)*\.{1}[\w]{2,8}(\/([\w-.~:/?#[\]@!$&')(*+,;=])*)?/),
   }),
 }), updateAvatar);
-
 module.exports = router;

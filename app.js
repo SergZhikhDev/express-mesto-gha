@@ -1,11 +1,16 @@
+/* eslint-disable no-plusplus */
+/* eslint-disable no-unused-vars */
+/* eslint-disable consistent-return */
+/* eslint-disable spaced-comment */
 /* eslint-disable no-console */
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
 const routesUser = require('./routes/users');
+// const adminsRouter = require('./routes/admins');
 const { login, createUser } = require('./controllers/users');
-const auth = require('./middlewares/auth');
+const { isAuthorized } = require('./middlewares/auth');
 const routesCard = require('./routes/cards');
 const { NOT_FOUND_CODE } = require('./utils/errorcodes');
 
@@ -24,13 +29,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(addObjUser);
-app.use('/users', routesUser);
-app.use('/cards', routesCard);
+// app.use(isAuthorized);
 
+app.use('/users', isAuthorized, routesUser);
+app.use('/cards', isAuthorized, routesCard);
+// app.use('/', adminsRouter);
 app.post('/signin', login);
 app.post('/signup', createUser);
-app.use(auth);
 
 app.use((req, res) => {
   res.status(NOT_FOUND_CODE).send({ message: 'Страница не найдена' });
@@ -38,16 +43,13 @@ app.use((req, res) => {
 app.use(errors()); // обработчик ошибок celebrate
 
 app.use((err, req, res, next) => {
-  const { statusCode = 500, message } = err;
+  if (err.statusCode) {
+    return res.status(err.statusCode).send({ message: err.message });
+  }
 
-  res
-    .status(statusCode)
-    .send({
-      message: statusCode === 500
-        ? 'На сервере произошла ошибка'
-        : message,
-    });
-  next(new Error('Ошибка авторизации'));
+  console.error(err.stack);
+
+  res.status(500).send({ message: 'Что-то пошло не так(сообщение центрального обработчика ошибок)' });
 });
 
 app.listen(PORT, () => {

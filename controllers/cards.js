@@ -1,8 +1,8 @@
 /* eslint-disable consistent-return */
-const AnotherServerError = ('../errors/another-server-error');
-const BadRequestError = ('../errors/bad-request-error');
+const AnotherServerError = require('../errors/another-server-error');
+const BadRequestError = require('../errors/bad-request-error');
 // const BadRequireToken = ('../errors/bad-require-token');
-const NotFoundError = ('../errors/not-found-error');
+const NotFoundError = require('../errors/not-found-error');
 // const NotUniqueEmailError = ('../errors/not-unique-email');
 
 const Card = require('../models/card');
