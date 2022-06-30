@@ -14,6 +14,7 @@ const {
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
+    required: false,
     default: 'Жак-Ив Кусто',
     validate: userNameValidator,
   },
@@ -36,7 +37,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8,
     select: false,
     validate: userPasswordValidator,
   },

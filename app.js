@@ -1,12 +1,11 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const { errors } = require('celebrate');
+const { celebrate, Joi, errors } = require('celebrate');
 const routesUser = require('./routes/users');
-// const adminsRouter = require('./routes/admins');
+const routesCard = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { isAuthorized } = require('./middlewares/auth');
-const routesCard = require('./routes/cards');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -19,7 +18,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/users', isAuthorized, routesUser);
 app.use('/cards', isAuthorized, routesCard);
 app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.string().min(2).max(300),
+    email: Joi.string().min(2).max(30).required(),
+    password: Joi.string().min(2).max(30).required(),
+  }),
+}), createUser);
 
 app.use((req, res) => {
   res.status(400).send({ message: 'Страница не найдена' });

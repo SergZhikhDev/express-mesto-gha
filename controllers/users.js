@@ -74,7 +74,12 @@ module.exports.createUser = ((req, res, next) => {
       email: req.body.email,
       password: hash,
     }))
-    .then((user) => res.status(CREATE_CODE).send(user))
+    .then((user) => res.status(CREATE_CODE).send({
+      name: user.name,
+      about: user.about,
+      avatar: user.avatar,
+      email: user.email,
+    }))
     .catch((err) => {
       // if (err.name === 'ValidationError') {
       //   next(new BadRequestError('Переданы некорректные данные для запроса'));
@@ -91,7 +96,7 @@ module.exports.createUser = ((req, res, next) => {
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    throw new BadRequestError();
+    throw new BadRequireToken();
   }
   User.findUserByCredentials(email, password)
     .then(([user, isPasswordCorrect]) => {
