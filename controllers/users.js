@@ -1,25 +1,20 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-unreachable */
-/* eslint-disable no-console */
-/* eslint-disable consistent-return */
 const bcrypt = require('bcryptjs');
-const { generateToken } = require('../helpers/jwt');
+const { generateToken } = require('../utils/jwt');
 
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
 const SALT_ROUNDS = 10;
 
-const AnotherServerError = require('../errors/another-server-error');
-const BadRequestError = require('../errors/bad-request-error');
-const BadRequireToken = require('../errors/bad-require-token');
-const NotFoundError = require('../errors/not-found-error');
-const NotUniqueEmailError = require('../errors/not-unique-email');
-
+const BadRequestError = require('../utils/errorcodes/bad-request-error');
+const BadRequireToken = require('../utils/errorcodes/bad-require-token');
+const NotFoundError = require('../utils/errorcodes/not-found-error');
+const NotUniqueEmailError = require('../utils/errorcodes/not-unique-email');
+const NotDataError = require('../utils/errorcodes/not-pass-or-email');
 const User = require('../models/user');
 
 const {
   CORRECT_CODE,
   CREATE_CODE,
-} = require('../utils/errorcodes');
+} = require('../utils/correctcodes');
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
@@ -40,13 +35,13 @@ module.exports.getUserById = (req, res, next) => {
 
     .then((user) => {
       if (!user) {
-        throw new BadRequireToken('Нет данных для ответа');
+        throw new BadRequireToken();
       }
       res.status(CORRECT_CODE).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Пользователь по указанному id не найден.'));
+        next(new NotFoundError());
         return;
       }
       next();
@@ -63,12 +58,12 @@ module.exports.getUserSelfInfo = (req, res, next) => {
     .catch(next);
 };
 
-module.exports.createUser = (req, res, next) => {
+module.exports.createUser = ((req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
   if (!email || !password) {
-    return res.status(400).send({ message: 'Не передан пароль или емейл' });
+    throw new BadRequestError();
   }
   bcrypt
     .hash(password, SALT_ROUNDS)
@@ -86,25 +81,22 @@ module.exports.createUser = (req, res, next) => {
       // }
       // теперь есть дефолтные значения
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
-        next(new NotUniqueEmailError('Такой пользователь уже существует!'));
-        return;
+        next(new NotUniqueEmailError());
       }
-      next(new AnotherServerError('Ошибка по-умолчанию'));
-    });
-};
+      next(err);
+    })
+    .catch(next);
+});
 
 module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
-    console.log(2);
-    return res.status(400).send({ message: 'Не передан пароль или емейл' });
+    throw new BadRequestError();
   }
   User.findUserByCredentials(email, password)
     .then(([user, isPasswordCorrect]) => {
       if (!isPasswordCorrect) {
-        const err = new Error('Не правильный пароль или емейл');
-        err.statusCode = 403;
-        throw err;
+        throw NotDataError();
       }
       return generateToken({ email: user.email, expiresIn: '7d' });
     })
@@ -115,41 +107,42 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.updateProfile = (req, res, next) => {
-  User.findByIdAndUpdate(req.user._id, req.body, {
+  User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
     runValidators: true,
   })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
+        throw new NotFoundError();
       }
       return res.status(CORRECT_CODE).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при обновлении профиля'));
+        next(new BadRequestError());
       }
-
-      next(new AnotherServerError('Ошибка по-умолчанию'));
-    });
+      next(err);
+    })
+    .catch(next);
 };
 
 module.exports.updateAvatar = (req, res, next) => {
-  User.findByIdAndUpdate(req.user._id, req.body, {
+  User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
     runValidators: true,
   })
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Нет пользователя с таким id');
+        throw new NotFoundError();
       }
       return res.status(CORRECT_CODE).send({ data: user });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные при обновлении аватара'));
+        next(new BadRequestError());
       }
 
-      next(new AnotherServerError('Ошибка по-умолчанию'));
-    });
+      next(err);
+    })
+    .catch(next);
 };

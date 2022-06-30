@@ -1,5 +1,5 @@
 /* eslint-disable consistent-return */
-const { checkToken } = require('../helpers/jwt');
+const { checkToken } = require('../utils/jwt');
 const User = require('../models/user');
 
 const throwUnauthorizedError = () => {
