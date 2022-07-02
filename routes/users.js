@@ -2,12 +2,12 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 // мидлвер создана для разработки, в дальнейшем удалю.
-const { log } = require('../middlewares/consolelog');
+// const { log } = require('../middlewares/consolelog');
 
 const RegExp = /^http(s|):\/\/(www.|)((\w+|\d+)(-|\.))+[a-z]{2,3}(\S+|)(#| +|)$/i;
 const {
   getUsers,
-  getUserById,
+  // getUserById,
   getUserSelfInfo,
   updateProfile,
   updateAvatar,
@@ -18,11 +18,11 @@ router.get('/', celebrate({
     userId: Joi.string().alphanum().length(24),
   }),
 }), getUsers);
-router.get('/:userId', log, celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
-  }),
-}), getUserById);
+// router.get('/:userId', log, celebrate({
+//   params: Joi.object().keys({
+//     userId: Joi.string().alphanum().length(24),
+//   }),
+// }), getUserById);
 
 router.get('/me', getUserSelfInfo);
 

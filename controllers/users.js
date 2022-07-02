@@ -51,10 +51,9 @@ module.exports.getUserById = (req, res, next) => {
 };
 
 module.exports.getUserSelfInfo = (req, res, next) => {
-  // const { _id } = req.user;
-  User.findById(req.user._id)
+  User.findById(req.user.id)
     .then((user) => {
-      res.send(user);
+      res.status(CORRECT_CODE).send(user);
     })
     .catch(next);
 };
@@ -107,6 +106,7 @@ module.exports.login = (req, res, next) => {
       return generateToken({ email: user.email, expiresIn: '7d' });
     })
     .then((token) => {
+      console.log(token);
       res.send({ token });
     })
     .catch(next);
