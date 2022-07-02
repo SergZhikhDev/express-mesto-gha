@@ -51,8 +51,8 @@ module.exports.getUserById = (req, res, next) => {
 };
 
 module.exports.getUserSelfInfo = (req, res, next) => {
-  const { _id } = req.user.id;
-  User.findById(_id)
+  // const { _id } = req.user;
+  User.findById(req.user)
     .then((user) => {
       res.send(user);
     })

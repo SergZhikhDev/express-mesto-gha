@@ -40,11 +40,13 @@ module.exports.deleteCard = (req, res, next) => {
   Card
     .findById(req.params.cardId)
     .then((card) => {
+      console.log(1, card);
       if (!card) {
-        throw new BadRequireToken();// dddddddddddd
+        console.log(2);
+        next(new NotFoundError());// dddddddddddd
       }
       if (JSON.stringify(card.owner) !== JSON.stringify(req.user.id)) {
-        throw new BadRequestError();
+        throw new BadRequireToken();
       }
 
       return Card.findByIdAndRemove(req.params.cardId);
