@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const { generateToken } = require('../utils/jwt');
 
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
