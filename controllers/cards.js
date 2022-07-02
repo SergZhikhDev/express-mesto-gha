@@ -66,13 +66,13 @@ module.exports.likeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Запрашиваемая карточка не найдена');
+        throw new NotFoundError();
       }
       return res.status(CORRECT_CODE).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные для запроса'));
+        next(new BadRequestError());
       }
       next(err);
     })
@@ -87,13 +87,13 @@ module.exports.delLikeCard = (req, res, next) => {
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError('Запрашиваемая карточка не найдена');
+        throw new NotFoundError();
       }
       return res.status(CORRECT_CODE).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Переданы некорректные данные для запроса'));
+        next(new BadRequestError());
       }
       next(err);
     })
