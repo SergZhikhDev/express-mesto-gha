@@ -18,30 +18,31 @@ const {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((users) =>
-      /* Проверку убрал т.к. если нет пользователей,
+    .then((user) =>
+    /* Проверку убрал т.к. если нет пользователей,
       то будет ответ из мидлвары "Авторизуйтесь для доступа" */
-      // if (!users) {
-      //   throw new BadRequireToken('Нет данных для ответа');
-      // }
-      // eslint-disable-next-line implicit-arrow-linebreak
-      res.status(CORRECT_CODE).send(users))
+    // if (!users) {
+    //   throw new BadRequireToken('Нет данных для ответа');
+    // }
+    // eslint-disable-next-line implicit-arrow-linebreak
+      res.status(CORRECT_CODE).send(user))
     .catch(next);
 };
 
 module.exports.getUserById = (req, res, next) => {
   User
-    .findById(req.body._id)
-
+    .findById(req.params.userId)
     .then((user) => {
+      console.log(user);
       if (!user) {
-        throw new BadRequireToken();
+        console.log(3333);
+        throw new NotFoundError();
       }
       res.status(CORRECT_CODE).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new NotFoundError());
+        next(new BadRequestError());
         return;
       }
       next();
@@ -101,7 +102,7 @@ module.exports.login = (req, res, next) => {
   User.findUserByCredentials(email, password)
     .then(([user, isPasswordCorrect]) => {
       if (!isPasswordCorrect) {
-        throw NotDataError();
+        throw new NotDataError();
       }
       return generateToken({ email: user.email, expiresIn: '7d' });
     })

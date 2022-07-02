@@ -7,6 +7,8 @@ const routesCard = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { isAuthorized } = require('./middlewares/auth');
 
+const { LinksRegExp, EmailRegExp } = require('./utils/all-reg-exp');
+
 const { PORT = 3000 } = process.env;
 const app = express();
 
@@ -17,19 +19,24 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/users', isAuthorized, routesUser);
 app.use('/cards', isAuthorized, routesCard);
-app.post('/signin', login);
+app.post('/signin', celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().pattern(EmailRegExp),
+    password: Joi.string().min(2).max(30).required(),
+  }),
+}), login);
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().min(2).max(300),
-    email: Joi.string().min(2).max(30).required(),
-    password: Joi.string().min(2).max(30).required(),
+    avatar: Joi.string().pattern(LinksRegExp),
+    email: Joi.string().required().pattern(EmailRegExp),
+    password: Joi.string().min(2).required(),
   }),
 }), createUser);
 
 app.use((req, res) => {
-  res.status(400).send({ message: 'Страница не найдена' });
+  res.status(404).send({ message: 'Страница не найдена' });
 });
 app.use(errors()); // обработчик ошибок celebrate
 
@@ -45,5 +52,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(PORT, () => {
-  console.log('App listening on port PORT / Приложение запущено, используется порт PORT.');
+  console.log(`App listening on port ${PORT} / Приложение запущено, используется порт ${PORT}.`);
 });

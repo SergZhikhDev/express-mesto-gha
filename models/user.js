@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
-
 const bcrypt = require('bcrypt');
+const NotDataError = require('../utils/errorcodes/not-pass-or-email');
+
 const {
   userNameValidator,
   userAboutValidator,
@@ -15,17 +16,17 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: false,
-    default: 'Жак-Ив Кусто',
+    default: 'test',
     validate: userNameValidator,
   },
   about: {
     type: String,
-    default: 'Исследователь океана',
+    default: 'ab',
     validate: userAboutValidator,
   },
   avatar: {
     type: String,
-    default: 'https://www.pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    default: 'https://ya.ru/av.bmp',
     validate: userAvatarValidator,
   },
   email: {
@@ -46,7 +47,8 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+        // return Promise.reject(new Error('Неправильные почта или пароль'));
+        throw new NotDataError();
       }
       return Promise.all([
         user,

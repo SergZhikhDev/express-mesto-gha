@@ -2,6 +2,6 @@ module.exports = class BadRequireToken extends Error {
   constructor(message) {
     super(message);
     this.message = 'не верные данные';
-    this.statusCode = 401;
+    this.statusCode = 403;
   }
 };
