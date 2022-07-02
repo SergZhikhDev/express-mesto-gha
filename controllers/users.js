@@ -29,13 +29,18 @@ module.exports.getUsers = (req, res, next) => {
     .catch(next);
 };
 
+module.exports.getUserSelfInfo = (req, res, next) => {
+  User.findById(req.user.id)
+    .then((user) => {
+      res.status(CORRECT_CODE).send(user);
+    })
+    .catch(next);
+};
 module.exports.getUserById = (req, res, next) => {
   User
     .findById(req.params.userId)
     .then((user) => {
-      console.log(user);
       if (!user) {
-        console.log(3333);
         throw new NotFoundError();
       }
       res.status(CORRECT_CODE).send(user);
@@ -46,14 +51,6 @@ module.exports.getUserById = (req, res, next) => {
         return;
       }
       next();
-    })
-    .catch(next);
-};
-
-module.exports.getUserSelfInfo = (req, res, next) => {
-  User.findById(req.user.id)
-    .then((user) => {
-      res.status(CORRECT_CODE).send(user);
     })
     .catch(next);
 };
@@ -81,6 +78,7 @@ module.exports.createUser = ((req, res, next) => {
       email: user.email,
     }))
     .catch((err) => {
+      // теперь есть дефолтные значения
       // if (err.name === 'ValidationError') {
       //   next(new BadRequestError('Переданы некорректные данные для запроса'));
       // }
@@ -106,7 +104,6 @@ module.exports.login = (req, res, next) => {
       return generateToken({ email: user.email, expiresIn: '7d' });
     })
     .then((token) => {
-      console.log(token);
       res.send({ token });
     })
     .catch(next);

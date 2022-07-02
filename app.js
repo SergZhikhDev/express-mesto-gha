@@ -38,15 +38,13 @@ app.post('/signup', celebrate({
 app.use((req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
-app.use(errors()); // обработчик ошибок celebrate
+app.use(errors());
 
 app.use((err, req, res, next) => {
   if (err.statusCode) {
     res.status(err.statusCode).send({ message: err.message });
   }
-
   console.error(err.stack);
-
   res.status(500).send({ message: 'Что-то пошло не так(сообщение центрального обработчика ошибок)' });
   next();
 });

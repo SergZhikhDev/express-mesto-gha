@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { log } = require('../middlewares/consolelog');// мидлвер создана для разработки, в дальнейшем удалю.
@@ -32,7 +31,7 @@ router.put('/:cardId/likes', log, celebrate({
     cardId: Joi.string().alphanum().length(24),
   }),
 }), likeCard);
-/* Заменил две функции (addLike , deleteLike), одной toggleLike */
+
 router.delete('/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),

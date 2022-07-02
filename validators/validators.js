@@ -17,11 +17,6 @@ module.exports.userAboutValidator = [
 ];
 
 module.exports.userAvatarValidator = [
-  // validate({
-  //   validator: 'matches',
-  //   arguments: /^[a-zA-Z-]+$/i,
-  //   message: '',
-  // }),
   validate({
     validator: 'isLength',
     arguments: [2, 150],
@@ -54,11 +49,6 @@ module.exports.cardNameValidator = [
 
 ];
 module.exports.cardLinkValidator = [
-  // validate({
-  //   validator: 'matches',
-  //   arguments: /^[a-zA-Z-]+$/i,
-  //   message: '',
-  // }),
   validate({
     validator: 'isLength',
     arguments: [2, 150],

@@ -10,8 +10,6 @@ const {
   userPasswordValidator,
 } = require('../validators/validators');
 
-// const isEmail = require('validator/lib/isEmail');// источник: //https://github.com/validatorjs/validator.js
-
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -47,7 +45,6 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        // return Promise.reject(new Error('Неправильные почта или пароль'));
         throw new NotDataError();
       }
       return Promise.all([

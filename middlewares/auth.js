@@ -1,4 +1,3 @@
-/* eslint-disable consistent-return */
 const { checkToken } = require('../utils/jwt');
 const User = require('../models/user');
 
@@ -8,7 +7,8 @@ const throwUnauthorizedError = () => {
   throw error;
 };
 
-const isAuthorized = (req, res, next) => {
+// eslint-disable-next-line consistent-return
+const isAuthorized = ((req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
@@ -27,9 +27,9 @@ const isAuthorized = (req, res, next) => {
 
       next();
     });
-  } catch (e) {
+  } catch (err) {
     throwUnauthorizedError();
   }
-};
+});
 
 module.exports = { isAuthorized };
