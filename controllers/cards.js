@@ -1,100 +1,118 @@
-const BadRequestError = require('../utils/errorcodes/bad-request-error');
-const NotFoundError = require('../utils/errorcodes/not-found-error');
-const BadRequireToken = require('../utils/errorcodes/bad-require-token');
-
 const Card = require('../models/card');
 
 const {
   CORRECT_CODE,
   CREATE_CODE,
-} = require('../utils/correctcodes');
+  BAD_REQUEST_CODE,
+  NOT_FOUND_CODE,
+  SERVER_ERROR_CODE,
+} = require('../utils/errorcodes');
 
-module.exports.getCards = (_req, res, next) => {
+module.exports.getCards = (req, res) => {
   Card.find({})
-    .then((cards) => res.status(CORRECT_CODE).send(cards))
-    .catch(next);
+    .then((card) => res.status(CORRECT_CODE).send(card))
+    .catch(() => res.status(SERVER_ERROR_CODE).send({ message: 'Ошибка по-умолчанию' }));
 };
 
-module.exports.createCard = (req, res, next) => {
+module.exports.createCard = (req, res) => {
+  const owner = req.user._id;
   const { name, link } = req.body;
   Card.create({
     name,
     link,
-    owner: req.user.id,
+    owner,
   })
     .then((card) => {
       res.status(CREATE_CODE).send(card);
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new BadRequestError());
+        return res
+          .status(BAD_REQUEST_CODE)
+          .send({
+            message: 'Переданы некорректные данные при создании карточки',
+          });
       }
-      next(err);
-    })
-    .catch(next);
-};
-
-module.exports.deleteCard = (req, res, next) => {
-  Card
-    .findById(req.params.cardId)
-    .then((card) => {
-      if (!card) {
-        next(new NotFoundError());
-      }
-      if (JSON.stringify(card.owner) !== JSON.stringify(req.user.id)) {
-        throw new BadRequireToken();
-      }
-      return Card.findByIdAndRemove(req.params.cardId);
-    })
-    .then((cards) => {
-      res.status(CORRECT_CODE).send(cards);
-    })
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError());
-      }
-      next(err);
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Ошибка по умоланию' });
     });
 };
 
-module.exports.likeCard = (req, res, next) => {
-  Card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user.id } },
-    { new: true },
-  )
+module.exports.deleteCard = (req, res) => {
+  Card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (!card) {
-        throw new NotFoundError();
+        return res
+          .status(NOT_FOUND_CODE)
+          .send({ message: 'Запрашиваемая карточка не найдена' });
       }
-      return res.status(CORRECT_CODE).send({ data: card });
+      return res.status(CORRECT_CODE).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError());
+        return res
+          .status(BAD_REQUEST_CODE)
+          .send({
+            message: 'Переданы некорректные данные для удаления карточки',
+          });
       }
-      next(err);
-    })
-    .catch(next);
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Ошибка по умоланию' });
+    });
 };
 
-module.exports.delLikeCard = (req, res, next) => {
+module.exports.addLikeCard = (req, res) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user.id } },
+    { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => {
       if (!card) {
-        throw new NotFoundError();
+        return res
+          .status(NOT_FOUND_CODE)
+          .send({ message: 'Запрашиваемая карточка не найдена' });
       }
       return res.status(CORRECT_CODE).send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError());
+        return res
+          .status(BAD_REQUEST_CODE)
+          .send({
+            message: 'Переданы некорректные данные для постановки лайка',
+          });
       }
-      next(err);
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Ошибка по умоланию' });
+    });
+};
+
+module.exports.delLikeCard = (req, res) => {
+  Card.findByIdAndUpdate(
+    req.params.cardId,
+    { $pull: { likes: req.user._id } },
+    { new: true },
+  )
+    .then((card) => {
+      if (!card) {
+        return res
+          .status(NOT_FOUND_CODE)
+          .send({ message: 'Запрашиваемая карточка не найдена' });
+      }
+      return res.status(CORRECT_CODE).send({ data: card });
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        return res
+          .status(BAD_REQUEST_CODE)
+          .send({ message: 'Переданы некорректные данные для  снятии лайка' });
+      }
+      return res
+        .status(SERVER_ERROR_CODE)
+        .send({ message: 'Ошибка по умоланию' });
+    });
 };

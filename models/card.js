@@ -1,19 +1,15 @@
 const mongoose = require('mongoose');
-const {
-  cardNameValidator,
-  cardLinkValidator,
-} = require('../validators/validators');
 
 const cardSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
-    validate: cardNameValidator,
+    minlength: 2,
+    maxlength: 30,
   },
   link: {
     type: String,
     required: true,
-    validate: cardLinkValidator,
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
