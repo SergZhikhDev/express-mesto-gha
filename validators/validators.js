@@ -16,15 +16,6 @@ module.exports.userAboutValidator = [
   }),
 ];
 
-module.exports.userAvatarValidator = [
-  validate({
-    validator: 'isLength',
-    arguments: [2, 150],
-    message: 'Поле "name" должно содержать от {ARGS[0]} до {ARGS[1]} символов',
-  }),
-
-];
-
 module.exports.userEmailValidator = [
   validate({
     validator: 'isEmail',
@@ -50,8 +41,10 @@ module.exports.cardNameValidator = [
 ];
 module.exports.cardLinkValidator = [
   validate({
-    validator: 'isLength',
-    arguments: [2, 150],
-    message: 'Поле "name" должно содержать от {ARGS[0]} до {ARGS[1]} символов',
+    validator: 'isURL',
+    protocols: true,
+    require_valid_protocol: true,
+    validate_length: true,
+    message: 'Поле "name" должно содержать URL-ссылку',
   }),
 ];
