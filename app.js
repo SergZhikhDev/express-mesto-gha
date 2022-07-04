@@ -6,7 +6,6 @@ const routesUser = require('./routes/users');
 const routesCard = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { isAuthorized } = require('./middlewares/auth');
-const { errorPage, errorHandler } = require('./middlewares/error-handler');
 
 const { LinksRegExp, EmailRegExp } = require('./utils/all-reg-exp');
 
@@ -26,20 +25,29 @@ app.post('/signin', celebrate({
     password: Joi.string().min(2).max(30).required(),
   }),
 }), login);
-
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(LinksRegExp),
-    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } }),
+    email: Joi.string().required().pattern(EmailRegExp),
     password: Joi.string().min(2).required(),
   }),
 }), createUser);
 
+app.use((req, res) => {
+  res.status(404).send({ message: 'Страница не найдена' });
+});
 app.use(errors());
 
-app.use(errorPage, errorHandler);
+app.use((err, req, res, next) => {
+  if (err.statusCode) {
+    res.status(err.statusCode).send({ message: err.message });
+  }
+  console.error(err.stack);
+  res.status(500).send({ message: 'Что-то пошло не так(сообщение центрального обработчика ошибок)' });
+  next();
+});
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT} / Приложение запущено, используется порт ${PORT}.`);

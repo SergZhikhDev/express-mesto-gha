@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const NotDataError = require('../utils/errorcodes/not-pass-or-email');
-const { LinksRegExp } = require('../utils/all-reg-exp');
 
 const {
   userNameValidator,
   userAboutValidator,
+  userAvatarValidator,
   userEmailValidator,
   userPasswordValidator,
 } = require('../validators/validators');
@@ -25,14 +25,8 @@ const userSchema = new mongoose.Schema({
   avatar: {
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
-    validate: {
-      validator(v) {
-        return LinksRegExp.test(v);
-      },
-      message: (props) => `${props.value} is not a valid URL-link!/${props.value} Не верный формат URL-ссылки!!`,
-    },
+    validate: userAvatarValidator,
   },
-
   email: {
     type: String,
     unique: true,
