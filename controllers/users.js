@@ -45,7 +45,7 @@ module.exports.getUserById = (req, res, next) => {
       if (!user) {
         throw new NotFoundError();
       }
-      res.status(CORRECT_CODE).send(user);
+      return res.status(CORRECT_CODE).send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
@@ -59,7 +59,7 @@ module.exports.getUserById = (req, res, next) => {
 
 module.exports.createUser = ((req, res, next) => {
   const {
-    name, about, avatar, email, password,
+    email, password,
   } = req.body;
   if (!email || !password) {
     throw new BadRequestError();
@@ -67,9 +67,6 @@ module.exports.createUser = ((req, res, next) => {
   bcrypt
     .hash(password, SALT_ROUNDS)
     .then((hash) => User.create({
-      name,
-      about,
-      avatar,
       email: req.body.email,
       password: hash,
     }))
