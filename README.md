@@ -1,4 +1,4 @@
-[![Tests 13 sprint](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg?branch=main)](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-13-sprint.yml)
+[![Tests 13 sprint](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg?branch=pr13)](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-13-sprint.yml)
 
 [![Tests 14 sprint](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg?branch=main)](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-14-sprint.yml)
 
