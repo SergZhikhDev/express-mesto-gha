@@ -1,27 +1,36 @@
 const { checkToken } = require('../utils/jwt');
+
 const User = require('../models/user');
 
 const throwUnauthorizedError = () => {
   const error = new Error('Авторизуйтесь для доступа');
+
   error.statusCode = 401;
+
   throw error;
 };
 
+// eslint-disable-next-line consistent-return
+
+// eslint-disable-next-line consistent-return
 const isAuthorized = ((req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    throw res.status(401).send({ message: 'Необходима авторизация' });
+    return res.status(401).send({ message: 'Необходима авторизация' });
   }
+
   const token = authorization.replace('Bearer ', '');
+
   try {
     const payload = checkToken(token);
-    User.findOne({ _id: payload._id }).then((user) => {
+
+    User.findOne({ email: payload.email }).then((user) => {
       if (!user) {
         throwUnauthorizedError();
       }
 
-      req.user = { _id: user._id };
+      req.user = { id: user._id };
 
       next();
     });
