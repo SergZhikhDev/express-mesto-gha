@@ -48,7 +48,7 @@ module.exports.deleteCard = (req, res, next) => {
       console.log(2, card.owner);
       if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) {
         console.log(3);
-        next(new BadRequireToken());
+        throw new BadRequireToken();
       }
       console.log(4);
       return Card.findByIdAndRemove(req.params.cardId);
