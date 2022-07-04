@@ -39,22 +39,15 @@ module.exports.deleteCard = (req, res, next) => {
   Card
     .findById(req.params.cardId)
     .then((card) => {
-      console.log(req.params.cardid);
-      console.log(req.user._id);
       if (!card) {
-        console.log(1, card);
-        throw new NotFoundError();
+        next(new NotFoundError());
       }
-      console.log(2, card.owner);
-      if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) {
-        console.log(3);
+      if (JSON.stringify(card.owner) !== JSON.stringify(req.user.id)) {
         throw new BadRequireToken();
       }
-      console.log(4);
       return Card.findByIdAndRemove(req.params.cardId);
     })
     .then((cards) => {
-      console.log(5);
       res.status(CORRECT_CODE).send(cards);
     })
     .catch((err) => {
