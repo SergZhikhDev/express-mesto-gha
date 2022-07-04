@@ -7,23 +7,21 @@ const throwUnauthorizedError = () => {
   throw error;
 };
 
-// eslint-disable-next-line consistent-return
 const isAuthorized = ((req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    return res.status(401).send({ message: 'Необходима авторизация' });
+    throw res.status(401).send({ message: 'Необходима авторизация' });
   }
   const token = authorization.replace('Bearer ', '');
   try {
     const payload = checkToken(token);
-
-    User.findOne({ email: payload.email }).then((user) => {
+    User.findOne({ id: payload._id }).then((user) => {
       if (!user) {
         throwUnauthorizedError();
       }
 
-      req.user = { id: user._id };
+      req.user = { _id: user._id };
 
       next();
     });
