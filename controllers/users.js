@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 const { generateToken } = require('../utils/jwt');
 
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
@@ -78,11 +78,11 @@ module.exports.createUser = ((req, res, next) => {
       email: user.email,
     }))
     .catch((err) => {
+    // Оставить проверку лишним не будет, сегодня есть дефолтные значения завтра нет
       // теперь есть дефолтные значения
-      // if (err.name === 'ValidationError') {
-      //   next(new BadRequestError('Переданы некорректные данные для запроса'));
-      // }
-      // теперь есть дефолтные значения
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные для запроса'));
+      }
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
         next(new NotUniqueEmailError());
       }
@@ -101,7 +101,7 @@ module.exports.login = (req, res, next) => {
       if (!isPasswordCorrect) {
         throw new NotDataError();
       }
-      return generateToken({ email: user.email, expiresIn: '7d' });
+      return generateToken({ _id: user._id, expiresIn: '7d' });
     })
     .then((token) => {
       res.send({ token });
