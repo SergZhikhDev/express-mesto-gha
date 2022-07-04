@@ -15,21 +15,23 @@ const isAuthorized = ((req, res, next) => {
     return res.status(401).send({ message: 'Необходима авторизация' });
   }
   const token = authorization.replace('Bearer ', '');
+  const payload = checkToken(token);
   try {
-    const payload = checkToken(token);
-
-    User.findOne({ id: payload._id }).then((user) => {
+    User.findOne({ email: payload._id }).then((user) => {
       if (!user) {
         throwUnauthorizedError();
       }
 
-      req.user = { id: user._id };
+      // req.user = { id: user._id };
 
-      next();
+      // next();
     });
   } catch (err) {
     throwUnauthorizedError();
   }
+  req.user = payload;
+
+  next();
 });
 
 module.exports = { isAuthorized };
