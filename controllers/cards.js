@@ -39,11 +39,11 @@ module.exports.deleteCard = (req, res, next) => {
   Card
     .findById(req.params.cardId)
     .then((card) => {
-      console.log(req.params.cardId);
+      console.log(req.params.cardid);
       console.log(req.user._id);
       if (!card) {
         console.log(1, card);
-        next(new NotFoundError());
+        throw new NotFoundError();
       }
       console.log(2, card.owner);
       if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) {
