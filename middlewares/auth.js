@@ -18,7 +18,7 @@ const isAuthorized = ((req, res, next) => {
   try {
     const payload = checkToken(token);
 
-    User.findOne({ email: payload.email }).then((user) => {
+    User.findOne({ id: payload._id }).then((user) => {
       if (!user) {
         throwUnauthorizedError();
       }

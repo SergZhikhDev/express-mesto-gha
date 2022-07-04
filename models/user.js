@@ -14,17 +14,17 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: false,
-    default: 'Жак-Ив Кусто',
+    default: 'Жак-Ив Кусто', // Жак-Ив Кусто
     validate: userNameValidator,
   },
   about: {
     type: String,
-    default: 'Исследователь',
+    default: 'Исследователь', // Исследователь
     validate: userAboutValidator,
   },
   avatar: {
     type: String,
-    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png', // https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png
     validate: {
       validator(v) {
         return LinksRegExp.test(v);
