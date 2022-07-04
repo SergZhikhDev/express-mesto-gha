@@ -6,6 +6,7 @@ const routesUser = require('./routes/users');
 const routesCard = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { isAuthorized } = require('./middlewares/auth');
+const { errorPage, errorHandler } = require('./middlewares/error-handler');
 
 const { LinksRegExp, EmailRegExp } = require('./utils/all-reg-exp');
 
@@ -40,14 +41,7 @@ app.use((req, res) => {
 });
 app.use(errors());
 
-app.use((err, req, res, next) => {
-  if (err.statusCode) {
-    res.status(err.statusCode).send({ message: err.message });
-  }
-  console.error(err.stack);
-  res.status(500).send({ message: 'Что-то пошло не так(сообщение центрального обработчика ошибок)' });
-  next();
-});
+app.use(errorPage, errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT} / Приложение запущено, используется порт ${PORT}.`);
