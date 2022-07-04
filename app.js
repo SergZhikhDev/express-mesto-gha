@@ -8,7 +8,7 @@ const { login, createUser } = require('./controllers/users');
 const { isAuthorized } = require('./middlewares/auth');
 const { errorPage, errorHandler } = require('./middlewares/error-handler');
 
-const { LinksRegExp, EmailRegExp } = require('./utils/all-reg-exp');
+const { LinksRegExp } = require('./utils/all-reg-exp');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -22,7 +22,7 @@ app.use('/users', isAuthorized, routesUser);
 app.use('/cards', isAuthorized, routesCard);
 app.post('/signin', celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().pattern(EmailRegExp),
+    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } }),
     password: Joi.string().min(2).max(30).required(),
   }),
 }), login);
@@ -31,7 +31,7 @@ app.post('/signup', celebrate({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(LinksRegExp),
-    email: Joi.string().required().pattern(EmailRegExp),
+    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } }),
     password: Joi.string().min(2).required(),
   }),
 }), createUser);

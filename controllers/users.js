@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
-const { generateToken } = require('../utils/jwt');
+const jwt = require('jsonwebtoken');
 
+const SECRET_KEY = 'very_secret';
 const MONGO_DUPLICATE_ERROR_CODE = 11000;
 const SALT_ROUNDS = 10;
 
@@ -18,14 +19,7 @@ const {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((user) =>
-    /* Проверку убрал т.к. если нет пользователей,
-      то будет ответ из мидлвары "Авторизуйтесь для доступа" */
-    // if (!users) {
-    //   throw new BadRequireToken('Нет данных для ответа');
-    // }
-    // eslint-disable-next-line implicit-arrow-linebreak
-      res.status(CORRECT_CODE).send(user))
+    .then((user) => res.status(CORRECT_CODE).send(user))
     .catch(next);
 };
 
@@ -78,11 +72,9 @@ module.exports.createUser = ((req, res, next) => {
       email: user.email,
     }))
     .catch((err) => {
-      // теперь есть дефолтные значения
-      // if (err.name === 'ValidationError') {
-      //   next(new BadRequestError('Переданы некорректные данные для запроса'));
-      // }
-      // теперь есть дефолтные значения
+      if (err.name === 'ValidationError') {
+        next(new BadRequestError('Переданы некорректные данные для запроса'));
+      }
       if (err.code === MONGO_DUPLICATE_ERROR_CODE) {
         next(new NotUniqueEmailError());
       }
@@ -101,7 +93,7 @@ module.exports.login = (req, res, next) => {
       if (!isPasswordCorrect) {
         throw new NotDataError();
       }
-      return generateToken({ id: user._id, expiresIn: '7d' });
+      return jwt.sign({ id: user._id }, SECRET_KEY, { expiresIn: '7d' });
     })
     .then((token) => {
       res.send({ token });

@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 const BadRequestError = require('../utils/errorcodes/bad-request-error');
 const NotFoundError = require('../utils/errorcodes/not-found-error');
 const BadRequireToken = require('../utils/errorcodes/bad-require-token');

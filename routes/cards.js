@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { LinksRegExp /* , IdRegExp */ } = require('../utils/all-reg-exp');
+const { LinksRegExp } = require('../utils/all-reg-exp');
 
 const {
   getCards,
@@ -36,4 +36,5 @@ router.delete('/:cardId/likes', celebrate({
     cardId: Joi.string().alphanum().length(24),
   }),
 }), delLikeCard);
+
 module.exports = router;

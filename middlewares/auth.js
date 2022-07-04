@@ -1,5 +1,8 @@
-const { checkToken } = require('../utils/jwt');
+// const { checkToken } = require('../utils/jwt');
+const jwt = require('jsonwebtoken');
 const User = require('../models/user');
+
+const SECRET_KEY = 'very_secret';
 
 const throwUnauthorizedError = () => {
   const error = new Error('Авторизуйтесь для доступа');
@@ -7,24 +10,19 @@ const throwUnauthorizedError = () => {
   throw error;
 };
 
-// eslint-disable-next-line consistent-return
 const isAuthorized = ((req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization) {
-    return res.status(401).send({ message: 'Необходима авторизация' });
+    throw throwUnauthorizedError();
   }
-  const token = authorization.replace('Bearer ', '');
-  const payload = checkToken(token);
+  const token = () => jwt.verify(authorization.replace('Bearer ', ''), SECRET_KEY);
+  const payload = token();
   try {
     User.findOne({ id: payload._id }).then((user) => {
       if (!user) {
         throwUnauthorizedError();
       }
-
-      // req.user = { id: user._id };
-
-      // next();
     });
   } catch (err) {
     throwUnauthorizedError();
