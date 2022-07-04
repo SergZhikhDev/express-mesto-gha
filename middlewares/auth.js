@@ -1,4 +1,3 @@
-// const { checkToken } = require('../utils/jwt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
