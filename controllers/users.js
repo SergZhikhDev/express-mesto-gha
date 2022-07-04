@@ -30,8 +30,10 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUserSelfInfo = (req, res, next) => {
-  User.findById(req.user._id)
+  console.log(req.user);
+  User.findById(req.user)
     .then((user) => {
+      console.log(user);
       res.status(CORRECT_CODE).send(user);
     })
     .catch(next);
