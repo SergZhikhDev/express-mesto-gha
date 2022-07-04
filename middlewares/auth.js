@@ -17,7 +17,7 @@ const isAuthorized = ((req, res, next) => {
   const token = authorization.replace('Bearer ', '');
   const payload = checkToken(token);
   try {
-    User.findOne({ email: payload._id }).then((user) => {
+    User.findOne({ id: payload._id }).then((user) => {
       if (!user) {
         throwUnauthorizedError();
       }
