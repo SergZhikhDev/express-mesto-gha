@@ -6,7 +6,7 @@ const routesUser = require('./routes/users');
 const routesCard = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { isAuthorized } = require('./middlewares/auth');
-const errorHandler = require('./utils/error-handler');
+const { errorPage, errorHandler } = require('./middlewares/error-handler');
 
 const { LinksRegExp, EmailRegExp } = require('./utils/all-reg-exp');
 
@@ -26,13 +26,14 @@ app.post('/signin', celebrate({
     password: Joi.string().min(2).max(30).required(),
   }),
 }), login);
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(LinksRegExp),
     // email: Joi.string().required().pattern(EmailRegExp),
-    email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } }), // В main удалить все связи
+    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } }), // В main удалить все связи
     password: Joi.string().min(2).required(),
   }),
 }), createUser);
@@ -55,7 +56,7 @@ app.use(errors());
 // 'Что-то пошло не так(сообщение центрального обработчика ошибок)' });
 //   next();
 // });
-app.use(errorHandler);
+app.use(errorPage, errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT} / Приложение запущено, используется порт ${PORT}.`);

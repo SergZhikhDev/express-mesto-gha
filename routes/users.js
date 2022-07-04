@@ -13,13 +13,7 @@ const {
 } = require('../controllers/users');
 
 // Параметром данный роут ничего не принимает
-router.get(
-  '/', /* celebrate({
-  params: Joi.object().keys({
-    userId: Joi.string().alphanum().length(24),
-  }),
-}), */ getUsers,
-);
+router.get('/', getUsers);
 
 router.get('/me', getUserSelfInfo);
 

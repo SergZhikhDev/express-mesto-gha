@@ -30,7 +30,7 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getUserSelfInfo = (req, res, next) => {
-  User.findById(req.user.id)
+  User.findById(req.user._id)
     .then((user) => {
       res.status(CORRECT_CODE).send(user);
     })
@@ -110,7 +110,7 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.updateProfile = (req, res, next) => {
-  User.findByIdAndUpdate(req.user.id, req.body, {
+  User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
     runValidators: true,
   })
@@ -130,7 +130,7 @@ module.exports.updateProfile = (req, res, next) => {
 };
 
 module.exports.updateAvatar = (req, res, next) => {
-  User.findByIdAndUpdate(req.user.id, req.body, {
+  User.findByIdAndUpdate(req.user._id, req.body, {
     new: true,
     runValidators: true,
   })
