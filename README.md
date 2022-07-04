@@ -1,8 +1,11 @@
 [![Tests for sprint 13](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-13-sprint.yml) 
 
 [![Tests for sprint 14](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/SergZhikhDev/express-mesto-gha/actions/workflows/tests-14-sprint.yml)
+
 # Проект Mesto фронтенд + бэкенд 
+
 ### Описание практической работы №13.
+
  В проекте разработан сервер для работы сервиса Mesto,  реализованного при выполнении предидущих практических работ(ПР).
  Он умеет проверять токены, регистрировать и авторизовывать пользователей, сохранять и отдавать карточки, запоминать,
  когда кто-то поставил лайк или передумал и убрал его. ПР  учит  работать с базой данных MongoDB.
