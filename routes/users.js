@@ -1,7 +1,5 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-// мидлвер создана для разработки, в дальнейшем удалю.
-const { log } = require('../middlewares/consolelog');
 const { LinksRegExp, IdRegExp } = require('../utils/all-reg-exp');
 
 const {
@@ -12,12 +10,11 @@ const {
   updateAvatar,
 } = require('../controllers/users');
 
-// Параметром данный роут ничего не принимает
 router.get('/', getUsers);
 
-router.get('/me', log, getUserSelfInfo);
+router.get('/me', getUserSelfInfo);
 
-router.get('/:userId', /* log, */ celebrate({
+router.get('/:userId', celebrate({
   params: Joi.object().keys({
     userId: Joi.string().pattern(IdRegExp).length(24),
   }),

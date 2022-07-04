@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { log } = require('../middlewares/consolelog');// мидлвер создана для разработки, в дальнейшем удалю.
-const { LinksRegExp, IdRegExp } = require('../utils/all-reg-exp');
+const { LinksRegExp /* , IdRegExp */ } = require('../utils/all-reg-exp');
 
 const {
   getCards,
@@ -20,13 +19,15 @@ router.post('/', celebrate({
   }),
 }), createCard);
 
-router.delete('/:cardId', celebrate({
+router.delete(
+  '/:cardId', /* celebrate({
   params: Joi.object().keys({
-    cardId: Joi.string().pattern(IdRegExp).length(24), // Тоже самое, что и в роутах users
+    cardId: Joi.string().length(24),
   }),
-}), deleteCard);
+}), */ deleteCard,
+);
 
-router.put('/:cardId/likes', log, celebrate({
+router.put('/:cardId/likes', celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().alphanum().length(24),
   }),

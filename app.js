@@ -32,30 +32,13 @@ app.post('/signup', celebrate({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
     avatar: Joi.string().pattern(LinksRegExp),
-    // email: Joi.string().required().pattern(EmailRegExp),
-    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } }), // В main удалить все связи
+    email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } }),
     password: Joi.string().min(2).required(),
   }),
 }), createUser);
-/* У вас реализован централизованный обработчик ошибок, который отправляет ответ об ошибки клиенту,
-с этого момента в контроллерах, в случае ошибки создаётся объект ошибки и передаётся в next */
-/* Удалил */
-// app.use((req, res) => {
-//   res.status(404).send({ message: 'Страница не найдена' });
-// });
+
 app.use(errors());
 
-/* Лучше вынести в отдельный модуль */
-
-// app.use((err, req, res, next) => {
-//   if (err.statusCode) {
-//     res.status(err.statusCode).send({ message: err.message });
-//   }
-//   // console.error(err.stack);/* Все отладочные строки нужно убирать */
-//   res.status(500).send({ message:
-// 'Что-то пошло не так(сообщение центрального обработчика ошибок)' });
-//   next();
-// });
 app.use(errorPage, errorHandler);
 
 app.listen(PORT, () => {

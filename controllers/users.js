@@ -18,22 +18,13 @@ const {
 
 module.exports.getUsers = (req, res, next) => {
   User.find({})
-    .then((user) =>
-    /* Проверку убрал т.к. если нет пользователей,
-      то будет ответ из мидлвары "Авторизуйтесь для доступа" */
-    // if (!users) {
-    //   throw new BadRequireToken('Нет данных для ответа');
-    // }
-    // eslint-disable-next-line implicit-arrow-linebreak
-      res.status(CORRECT_CODE).send(user))
+    .then((user) => res.status(CORRECT_CODE).send(user))
     .catch(next);
 };
 
 module.exports.getUserSelfInfo = (req, res, next) => {
-  console.log(req.user);
   User.findById(req.user)
     .then((user) => {
-      console.log(user);
       res.status(CORRECT_CODE).send(user);
     })
     .catch(next);
@@ -80,8 +71,6 @@ module.exports.createUser = ((req, res, next) => {
       email: user.email,
     }))
     .catch((err) => {
-    // Оставить проверку лишним не будет, сегодня есть дефолтные значения завтра нет
-      // теперь есть дефолтные значения
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные для запроса'));
       }

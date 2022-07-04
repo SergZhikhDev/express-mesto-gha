@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 const BadRequestError = require('../utils/errorcodes/bad-request-error');
 const NotFoundError = require('../utils/errorcodes/not-found-error');
 const BadRequireToken = require('../utils/errorcodes/bad-require-token');
@@ -42,7 +41,7 @@ module.exports.deleteCard = (req, res, next) => {
       if (!card) {
         next(new NotFoundError());
       }
-      if (JSON.stringify(card.owner) !== JSON.stringify(req.user.id)) {
+      if (JSON.stringify(card.owner) !== JSON.stringify(req.user._id)) {
         throw new BadRequireToken();
       }
       return Card.findByIdAndRemove(req.params.cardId);
