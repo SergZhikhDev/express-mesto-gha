@@ -36,9 +36,10 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'Страница не найдена' });
-});
+// забыл удалить, я вынес её в error handlers.
+// app.use((req, res) => {
+//   res.status(404).send({ message: 'Страница не найдена' });
+// });
 app.use(errors());
 
 app.use(errorPage, errorHandler);

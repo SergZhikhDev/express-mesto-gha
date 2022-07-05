@@ -16,17 +16,17 @@ const isAuthorized = ((req, res, next) => {
     throw throwUnauthorizedError();
   }
   const token = () => jwt.verify(authorization.replace('Bearer ', ''), SECRET_KEY);
-  const payload = token();
   try {
+    const payload = token();
     User.findOne({ id: payload._id }).then((user) => {
       if (!user) {
         throwUnauthorizedError();
       }
     });
+    req.user = payload;
   } catch (err) {
     throwUnauthorizedError();
   }
-  req.user = payload;
 
   next();
 });
