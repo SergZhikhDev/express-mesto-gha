@@ -6,9 +6,10 @@ const routesUser = require('./routes/users');
 const routesCard = require('./routes/cards');
 const { login, createUser } = require('./controllers/users');
 const { isAuthorized } = require('./middlewares/auth');
-const { errorPage, errorHandler } = require('./middlewares/error-handler');
+const { errorHandler } = require('./middlewares/error-handler');
 
 const { LinksRegExp } = require('./utils/all-reg-exp');
+const NotFoundError = require('./utils/errorcodes/not-found-error');
 
 const { PORT = 3000 } = process.env;
 const app = express();
@@ -36,13 +37,11 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
-// забыл удалить, я вынес её в error handlers.
-// app.use((req, res) => {
-//   res.status(404).send({ message: 'Страница не найдена' });
-// });
+app.use((req, res, next) => {
+  next(new NotFoundError());
+});
 app.use(errors());
-
-app.use(errorPage, errorHandler);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT} / Приложение запущено, используется порт ${PORT}.`);

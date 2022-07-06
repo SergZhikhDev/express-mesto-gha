@@ -15,8 +15,8 @@ const isAuthorized = ((req, res, next) => {
   if (!authorization) {
     throw throwUnauthorizedError();
   }
-  const token = () => jwt.verify(authorization.replace('Bearer ', ''), SECRET_KEY);
   try {
+    const token = () => jwt.verify(authorization.replace('Bearer ', ''), SECRET_KEY);
     const payload = token();
     User.findOne({ id: payload._id }).then((user) => {
       if (!user) {

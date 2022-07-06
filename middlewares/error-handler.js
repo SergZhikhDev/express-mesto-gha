@@ -1,7 +1,7 @@
-module.exports.errorPage = ((req, res, next) => {
-  res.status(404).send({ message: 'Страница не найдена' });
-  next();
-});
+// module.exports.errorPage = ((req, res, next) => {
+//   res.status(404).send({ message: 'Страница не найдена' });
+//   next();
+// });
 
 module.exports.errorHandler = ((err, req, res, next) => {
   if (err.statusCode) {
