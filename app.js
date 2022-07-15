@@ -19,15 +19,15 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/users', isAuthorized, routesUser);
-app.use('/cards', isAuthorized, routesCard);
-app.post('/signin', celebrate({
+app.use('/api/users', isAuthorized, routesUser);
+app.use('/api/cards', isAuthorized, routesCard);
+app.post('/api/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ru'] } }),
     password: Joi.string().min(2).max(30).required(),
   }),
 }), login);
-app.post('/signup', celebrate({
+app.post('/api/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
